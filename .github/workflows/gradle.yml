@@ -50,8 +50,8 @@ jobs:
       # 이미지 태그 및 푸시
       - name: Tag and Push Docker image to ECR
         run: |
-          docker tag myapp:latest ${{ secrets.AWS_ECR_URL }}/fest-on:latest
-          docker push ${{ secrets.AWS_ECR_URL }}/fest-on:latest
+          docker tag myapp:latest ${{ secrets.AWS_ECR_URL }}:latest
+          docker push ${{ secrets.AWS_ECR_URL }}:latest
 
       # AWS 서버에 Docker 이미지 배포 및 컨테이너 실행
       - name: Deploy to AWS EC2
@@ -64,7 +64,7 @@ jobs:
             docker stop myapp || true
             docker rm myapp || true
             aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{ secrets.AWS_ECR_URL }}
-            docker pull ${{ secrets.AWS_ECR_URL }}/fest-on:latest
-            docker run -d -p 8080:8080 --name myapp ${{ secrets.AWS_ECR_URL }}/fest-on:latest
+            docker pull ${{ secrets.AWS_ECR_URL }}:latest
+            docker run -d -p 8080:8080 --name myapp ${{ secrets.AWS_ECR_URL }}:latest
             docker image prune -f
 
