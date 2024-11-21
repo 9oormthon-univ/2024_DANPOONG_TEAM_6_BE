@@ -27,7 +27,7 @@ jobs:
       # src/main/resources 폴더 생성
       - name: Create resources directory
         run: mkdir -p src/main/resources
-        
+
       - name: Set environment values
         run: |
           cd ./src/main/resources # resources 폴더로 이동
@@ -50,8 +50,8 @@ jobs:
       # 이미지 태그 및 푸시
       - name: Tag and Push Docker image to ECR
         run: |
-          docker tag myapp:latest ${{ secrets.AWS_ECR_URL }}/festON:latest
-          docker push ${{ secrets.AWS_ECR_URL }}/festON:latest
+          docker tag myapp:latest ${{ secrets.AWS_ECR_URL }}/fest-on:latest
+          docker push ${{ secrets.AWS_ECR_URL }}/fest-on:latest
 
       # AWS 서버에 Docker 이미지 배포 및 컨테이너 실행
       - name: Deploy to AWS EC2
@@ -64,7 +64,7 @@ jobs:
             docker stop myapp || true
             docker rm myapp || true
             aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{ secrets.AWS_ECR_URL }}
-            docker pull ${{ secrets.AWS_ECR_URL }}/festON:latest
-            docker run -d -p 8080:8080 --name myapp ${{ secrets.AWS_ECR_URL }}/festON:latest
+            docker pull ${{ secrets.AWS_ECR_URL }}/fest-on:latest
+            docker run -d -p 8080:8080 --name myapp ${{ secrets.AWS_ECR_URL }}/fest-on:latest
             docker image prune -f
 
