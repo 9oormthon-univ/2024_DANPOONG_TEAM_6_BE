@@ -24,6 +24,10 @@ jobs:
         with:
           arguments: clean bootJar
 
+      # src/main/resources 폴더 생성
+      - name: Create resources directory
+        run: mkdir -p src/main/resources
+        
       - name: Set environment values
         run: |
           cd ./src/main/resources # resources 폴더로 이동
