@@ -1,0 +1,66 @@
+name: Java CI/CD with Gradle
+
+on:
+  push:
+    branches: [ "develop" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+        with:
+          arguments: clean bootJar
+
+      - name: Set environment values
+        run: |
+          cd ./src/main/resources # resources 폴더로 이동
+          touch ./application.yml # application.yml 파일 생성
+          echo "${{ secrets.ENV }}" > ./application.yml # github actions secret에서 가져온 값을 application.yml 파일에 씁니다
+        shell: bash
+
+      # AWS ECR 로그인
+      - name: Login to AWS ECR
+        run: |
+          aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{ secrets.AWS_ECR_URL }}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      # Docker 빌드
+      - name: Build Docker image
+        run: docker build --no-cache -t myapp:latest .
+
+      # 이미지 태그 및 푸시
+      - name: Tag and Push Docker image to ECR
+        run: |
+          docker tag myapp:latest ${{ secrets.AWS_ECR_URL }}/festON:latest
+          docker push ${{ secrets.AWS_ECR_URL }}/festON:latest
+
+      # AWS 서버에 Docker 이미지 배포 및 컨테이너 실행
+      - name: Deploy to AWS EC2
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.AWS_HOST }}
+          username: ubuntu
+          key: ${{ secrets.AWS_SSH_KEY }}
+          script: |
+            docker stop myapp || true
+            docker rm myapp || true
+            aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{ secrets.AWS_ECR_URL }}
+            docker pull ${{ secrets.AWS_ECR_URL }}/festON:latest
+            docker run -d -p 8080:8080 --name myapp ${{ secrets.AWS_ECR_URL }}/festON:latest
+            docker image prune -f
+
