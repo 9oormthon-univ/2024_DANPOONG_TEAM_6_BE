@@ -6,6 +6,7 @@ import com.example.festOn.application.user.entity.User;
 import com.example.festOn.application.user.service.UserService;
 import com.example.festOn.common.s3.service.S3Service;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,9 @@ public class ReviewController {
 
     @Operation(summary = "Create", description = "소감 올리기")
     @PostMapping("/add")
-    public ResponseEntity <String> createReview (@Valid @ModelAttribute CreateReviewRequest createReviewRequest) {
+    public ResponseEntity <String> createReview (
+            @Parameter(description = "파일은 files로, ", required = true)
+            @Valid @ModelAttribute CreateReviewRequest createReviewRequest) {
 
         User user = userService.getCurrentUser();
 
