@@ -17,16 +17,16 @@ public class UserController {
     private final UserService userService;
     @Operation(summary = "회원가입", description = "첫 로그인 사용자는 회원가입을 진행합니다.")
     @PostMapping ("/signup")
-    public ResponseEntity<Long> saveUser(@RequestParam("nickname") String nickname,
+    public ResponseEntity<String> saveUser(@RequestParam("nickname") String nickname,
                                          @RequestPart(value = "userImg", required = false) MultipartFile userImg) {
-        Long id = userService.save(nickname, userImg);
-        return ResponseEntity.ok(id);
+        String kakaoId = userService.save(nickname, userImg);
+        return ResponseEntity.ok(kakaoId);
     }
 
     @Operation(summary = "회원 탈퇴", description = "탈퇴시 회원과 관련된 정보가 삭제됩니다.")
     @DeleteMapping("/delete")
-    public ResponseEntity<Long> deleteUser() {
-        Long id = userService.deleteUser();
-        return ResponseEntity.ok(id);
+    public ResponseEntity<String> deleteUser() {
+        String kakaoId = userService.deleteUser();
+        return ResponseEntity.ok(kakaoId);
     }
 }
