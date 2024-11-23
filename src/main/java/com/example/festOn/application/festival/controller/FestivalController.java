@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -24,14 +23,12 @@ import java.util.List;
 public class FestivalController {
     private final FestivalService festivalService;
 
-    @GetMapping("/testCrawl")
+    /*@GetMapping("/testCrawl")
     public void testCrawling() throws IOException {
         festivalService.crawlFestival();
-    }
+    }*/
 
     @Operation(summary = "축제 검색", description = "검색어, 날짜, 지역으로 축제를 검색합니다")
-
-
     @GetMapping("/search")
     public ResponseEntity<List<Festival>> searchFestivals(
             @Parameter(name="keyword", example = "검색어")
@@ -43,5 +40,12 @@ public class FestivalController {
             @Parameter(name = "region", example = "지역 관련 키워드 서울시, 전라남도 등")
             @RequestParam(required = false) String region) {
         return ResponseEntity.ok().body(festivalService.searchFestivals(keyword, startDate, endDate, region));
+    }
+    @Operation(summary = "특정 날짜로 축제 검색", description = "특정 날짜에 진행 중인 축제 조회")
+    @GetMapping("/calender")
+    public ResponseEntity<List<Festival>> searchFestivalsOnGivenDate(
+            @Parameter(name="givenDate", example = "2024-02-26")
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate givenDate) {
+        return ResponseEntity.ok().body(festivalService.findAllByGivenDate(givenDate));
     }
 }

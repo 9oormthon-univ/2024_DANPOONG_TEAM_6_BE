@@ -18,4 +18,8 @@ public interface FestivalRepository extends JpaRepository<Festival, Long> {
                                    @Param("startDate") LocalDate startDate,
                                    @Param("endDate") LocalDate endDate,
                                    @Param("region") String region);
+
+    @Query("SELECT f FROM Festival f WHERE f.start <= :givenDate AND f.end >= : givenDate")
+    List<Festival> findAllByGivenDate(@Param("givenDate") LocalDate givenDate);
+
 }
