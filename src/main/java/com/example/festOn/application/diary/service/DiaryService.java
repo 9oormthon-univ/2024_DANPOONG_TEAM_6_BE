@@ -2,8 +2,7 @@ package com.example.festOn.application.diary.service;
 
 import com.example.festOn.application.diary.dao.DiaryImgRepository;
 import com.example.festOn.application.diary.dao.DiaryRepository;
-import com.example.festOn.application.diary.dto.DiaryRequestDto;
-import com.example.festOn.application.diary.dto.DiaryResponseDto;
+import com.example.festOn.application.diary.dto.CreateDiaryRequest;
 import com.example.festOn.application.diary.entity.Diary;
 import com.example.festOn.application.diary.entity.DiaryImg;
 import com.example.festOn.application.user.entity.User;
@@ -27,7 +26,7 @@ public class DiaryService {
     private final S3Service s3Service;
 
     @Transactional
-    public Long saveDiary(DiaryRequestDto requestDto, List<MultipartFile> diaryImages) {
+    public Long saveDiary(CreateDiaryRequest requestDto, List<MultipartFile> diaryImages) {
         User user = userService.getCurrentUser();
 
         if(user == null) {
