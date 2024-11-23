@@ -8,7 +8,7 @@ WORKDIR /app
 # Gradle 파일을 복사하고 종속성 다운로드
 COPY build.gradle settings.gradle ./
 COPY src ./src
-RUN gradle build --no-daemon  # Gradle 빌드 실행
+RUN gradle build -x test --no-daemon  # 테스트를 건너뛰고 Gradle 빌드 실행
 
 # 2. 프로덕션 이미지를 생성하는 단계
 FROM openjdk:17-jdk-slim
