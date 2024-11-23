@@ -68,4 +68,13 @@ public class FestivalController {
 
         return ResponseEntity.ok().body(result);
     }
+
+    @Operation(summary = "랜덤 5가지 추천", description = "오늘 날짜 기준으로 진행 중인 축제 무작위 5가지")
+    @GetMapping("/random")
+    public ResponseEntity<List<Festival>> getRandomFestival () {
+        LocalDate now = LocalDate.now();
+        List<Festival> festivalList = festivalService.getRandomFestival(now);
+
+        return ResponseEntity.ok().body(festivalList);
+    }
 }
