@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,7 +52,7 @@ public class DiaryController {
     @GetMapping(value = "/{diaryId}")
     public ResponseEntity<DiaryResponseDto> readDiary(
             @Parameter(description = "Diary Id를 입력해주세요.", required = true)
-            @PathVariable Long diaryId) {
+            @PathVariable Long diaryId) throws AccessDeniedException {
         User user = userService.getCurrentUser();
         DiaryResponseDto diaryResponseDto = diaryService.getDiary(user, diaryId);
         return ResponseEntity.ok().body(diaryResponseDto);

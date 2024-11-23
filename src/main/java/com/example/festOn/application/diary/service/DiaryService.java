@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @Service
@@ -48,9 +49,13 @@ public class DiaryService {
     }
 
     @Transactional
-    public DiaryResponseDto getDiary(User user, Long diaryId) {
+    public DiaryResponseDto getDiary(User user, Long diaryId) throws AccessDeniedException {
         Diary diary = diaryRepository.findById(diaryId)
                 .orElseThrow(() -> new NotFoundException("Diary Not Found"));
+
+        if(user != diary.getUser()) {
+            throw new AccessDeniedException("접근할 수 없습니다.");
+        }
 
         Festival festival = festivalRepository.findById(diary.getFestival().getId())
                 .orElseThrow(()->new NotFoundException("Festival Not Found"));
