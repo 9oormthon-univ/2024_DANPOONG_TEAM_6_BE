@@ -1,12 +1,15 @@
 package com.example.festOn.application.diary.entity;
 
+import com.example.festOn.application.common.BaseEntity;
 import com.example.festOn.application.festival.entity.Festival;
+import com.example.festOn.application.review.entity.ReviewImg;
 import com.example.festOn.application.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -15,7 +18,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Diary {
+public class Diary extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false)
@@ -27,15 +30,18 @@ public class Diary {
     @Column(columnDefinition = "TEXT")
     private String body;
 
-    @CreatedDate
-    @Column(nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    protected LocalDateTime createdAt;
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "festival_id", nullable = false)
+    @JoinColumn(name = "festival_id")
     private Festival festival;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(
+            mappedBy = "diary",
+            cascade = {CascadeType.PERSIST,CascadeType.REMOVE},
+            orphanRemoval = true
+    )
+    private List<DiaryImg> diaryImgList = new ArrayList<>();
 }

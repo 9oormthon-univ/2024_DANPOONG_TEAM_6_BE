@@ -1,10 +1,16 @@
 package com.example.festOn.application.diary.service;
 
+import com.amazonaws.services.kms.model.NotFoundException;
 import com.example.festOn.application.diary.dao.DiaryImgRepository;
 import com.example.festOn.application.diary.dao.DiaryRepository;
 import com.example.festOn.application.diary.dto.CreateDiaryRequest;
 import com.example.festOn.application.diary.entity.Diary;
 import com.example.festOn.application.diary.entity.DiaryImg;
+import com.example.festOn.application.festival.dao.FestivalRepository;
+import com.example.festOn.application.festival.entity.Festival;
+import com.example.festOn.application.review.dto.CreateReviewRequest;
+import com.example.festOn.application.review.entity.Review;
+import com.example.festOn.application.review.entity.ReviewImg;
 import com.example.festOn.application.user.entity.User;
 import com.example.festOn.application.user.service.UserService;
 import com.example.festOn.common.exception.UserNotFoundException;
@@ -22,44 +28,29 @@ public class DiaryService {
 
     private final DiaryRepository diaryRepository;
     private final DiaryImgRepository diaryImgRepository;
-    private final UserService userService;
-    private final S3Service s3Service;
+    private final FestivalRepository festivalRepository;
 
     @Transactional
-    public Long saveDiary(CreateDiaryRequest requestDto, List<MultipartFile> diaryImages) {
-        User user = userService.getCurrentUser();
-
-        if(user == null) {
-            throw new UserNotFoundException("현재 사용자가 존재하지 않습니다.");
-        }
-
+    public void saveDiary(User user, List<String> imageUrlList, CreateDiaryRequest createDiaryRequest) {
+        Festival festival = festivalRepository.findById(createDiaryRequest.festival_id())
+                .orElseThrow(()->new NotFoundException("Festival Not Found"));;
         Diary diary = Diary.builder()
-                .title(requestDto.getTitle())
-                .body(requestDto.getBody())
-                .festival(requestDto.getFestival())
+                .user(user)
+                .festival(festival)
+                .title(createDiaryRequest.title())
+                .body(createDiaryRequest.body())
                 .build();
 
-        diaryRepository.save(diary);
-        Long diaryId = diary.getId();
 
-        if(diaryImages != null) {
-            for(int i=0; i<diaryImages.size(); i++) {
-                MultipartFile imageFile = diaryImages.get(i);
-                String photoUrl = "";
-                if (imageFile != null && !imageFile.isEmpty()) {
-                    // 이미지 파일 업로드 후 URL 획득
-                    photoUrl = s3Service.uploadFile(imageFile, "diary");
-                }
-
-                DiaryImg diaryImg = DiaryImg.builder()
-                        .diary(diary)
-                        .imgUrl(photoUrl)
-                        .build();
-
-                diaryImgRepository.save(diaryImg);
-            }
+        for (String imageUrl : imageUrlList) {
+            DiaryImg diaryImg = DiaryImg.builder()
+                    .diary(diary)
+                    .imgUrl(imageUrl)
+                    .build();
+            diaryImgRepository.save(diaryImg);
         }
-        return diaryId;
+
+        diaryRepository.save(diary);
     }
 
 

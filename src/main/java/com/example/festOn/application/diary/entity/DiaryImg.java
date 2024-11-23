@@ -14,7 +14,8 @@ public class DiaryImg {
     @Column(name = "id", updatable = false)
     private Long id;
 
-    @OneToOne()
+    @ManyToOne
+    @JoinColumn(name="diary_id")
     private Diary diary;
 
 
