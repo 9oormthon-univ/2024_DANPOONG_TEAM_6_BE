@@ -21,8 +21,10 @@ public class Diary {
     @Column(name = "id", updatable = false)
     private Long id;
 
+    @Column(nullable = false, columnDefinition = "VARCHAR(255)")
     private String title;
 
+    @Column(columnDefinition = "TEXT")
     private String body;
 
     @CreatedDate
