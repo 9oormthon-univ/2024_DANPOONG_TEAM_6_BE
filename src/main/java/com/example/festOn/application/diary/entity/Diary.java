@@ -3,9 +3,7 @@ package com.example.festOn.application.diary.entity;
 import com.example.festOn.application.festival.entity.Festival;
 import com.example.festOn.application.user.entity.User;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
@@ -14,6 +12,8 @@ import java.util.List;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Diary {
     @Id

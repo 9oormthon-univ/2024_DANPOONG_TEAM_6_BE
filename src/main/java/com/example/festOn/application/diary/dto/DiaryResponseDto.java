@@ -12,5 +12,4 @@ public class DiaryResponseDto {
     User user;
     Festival festival;
     Diary diary;
-
 }

@@ -20,10 +20,10 @@ public class DiaryController {
     private final DiaryService diaryService;
 
     @Operation(summary = "일기 작성", description = "")
-    @PostMapping(value = "/", consumes = {"multipart/form-data"})
-    public ResponseEntity<String> uploadDiary(@RequestPart DiaryRequestDto requestDto,
+    @PostMapping(value = "/post", consumes = {"multipart/form-data"})
+    public ResponseEntity<Long> saveDiary(@RequestPart DiaryRequestDto requestDto,
                                               @RequestPart(required = false) List<MultipartFile> diaryImages) {
-        String kakaoId = diaryService;
-        return ResponseEntity.ok(kakaoId);
+        Long diaryId = diaryService.saveDiary(requestDto, diaryImages);
+        return ResponseEntity.ok(diaryId);
     }
 }
