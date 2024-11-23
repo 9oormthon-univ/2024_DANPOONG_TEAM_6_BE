@@ -1,6 +1,7 @@
 package com.example.festOn.application.user.service;
 
 import com.example.festOn.application.user.dao.UserRepository;
+import com.example.festOn.application.user.dto.UserRequestDto;
 import com.example.festOn.application.user.entity.User;
 import com.example.festOn.common.s3.service.S3Service;
 import lombok.RequiredArgsConstructor;
@@ -20,28 +21,14 @@ public class UserService {
     private final UserRepository userRepository;
     private final S3Service s3Service;
 
-    @Value("${spring.cloud.aws.s3.default-profile-img}")
-    private String defaultImg;
-
     @Transactional
-    public String save(String nickname, MultipartFile userImgFile) {
-        String kakaoId = getCurrentUserId();
-        Optional<User> existingUser = userRepository.findByKakaoId(kakaoId);
-
-        String userImg = "";
-        if(userImgFile.isEmpty()) userImg = defaultImg;
-        else userImg = s3Service.uploadFile(userImgFile, "profile");
-
-        if(existingUser.isEmpty()) {
-            User user = existingUser.get();
-            user.setNickname(nickname);
-            user.setUserImg(userImg);
-            return userRepository.save(user).getKakaoId();
-        }
+    public String save(UserRequestDto dto) {
+        String kakaoId = dto.kakaoId();
+        String userImg = s3Service.uploadFile(dto.userImg(), "profile");
 
         User newUser = User.builder()
                 .kakaoId(kakaoId)
-                .nickname(nickname)
+                .nickname(dto.nickname())
                 .userImg(userImg)
                 .alarm(true)
                 .diaryAlarm(true)

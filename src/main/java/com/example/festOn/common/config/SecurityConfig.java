@@ -36,6 +36,7 @@ public class SecurityConfig {
     private static final String[] ALLOWED_URL = {
             "/",
             "/auth/kakao",
+            "/api/user/signup",
             "/index.html",
             "/swagger-ui.html",
             "/swagger-ui/**",
