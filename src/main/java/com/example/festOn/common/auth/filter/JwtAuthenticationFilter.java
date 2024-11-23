@@ -22,7 +22,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (request.getRequestURI().startsWith("/auth/kakao")) {
+        if (request.getRequestURI().startsWith("/auth/kakao") || request.getRequestURI().startsWith("/api/user/signup")) {
             filterChain.doFilter(request, response);  // 필터를 건너뛰고 다음 필터로 진행
             return;
         }

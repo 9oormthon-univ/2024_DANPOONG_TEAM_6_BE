@@ -1,8 +1,12 @@
 package com.example.festOn.application.user.controller;
 
+import com.example.festOn.application.review.dto.CreateReviewRequest;
+import com.example.festOn.application.user.dto.UserRequestDto;
 import com.example.festOn.application.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,10 +20,10 @@ public class UserController {
 
     private final UserService userService;
     @Operation(summary = "회원가입", description = "첫 로그인 사용자는 회원가입을 진행합니다.")
-    @PostMapping(value = "/signup", consumes = {"multipart/form-data"})
-    public ResponseEntity<String> saveUser(@RequestParam("nickname") String nickname,
-                                         @RequestPart(value = "userImg", required = false) MultipartFile userImg) {
-        String kakaoId = userService.save(nickname, userImg);
+    @PostMapping("/signup")
+    public ResponseEntity<String> saveUser(@Parameter(description = "파일은 files로, ", required = true)
+                                               @Valid @ModelAttribute UserRequestDto dto) {
+        String kakaoId = userService.save(dto);
         return ResponseEntity.ok(kakaoId);
     }
 
