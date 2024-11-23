@@ -16,7 +16,7 @@ public class UserController {
 
     private final UserService userService;
     @Operation(summary = "회원가입", description = "첫 로그인 사용자는 회원가입을 진행합니다.")
-    @PostMapping ("/signup")
+    @PostMapping(value = "/signup", consumes = {"multipart/form-data"})
     public ResponseEntity<String> saveUser(@RequestParam("nickname") String nickname,
                                          @RequestPart(value = "userImg", required = false) MultipartFile userImg) {
         String kakaoId = userService.save(nickname, userImg);
