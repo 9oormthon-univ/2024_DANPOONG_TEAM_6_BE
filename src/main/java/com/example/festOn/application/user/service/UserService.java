@@ -2,7 +2,6 @@ package com.example.festOn.application.user.service;
 
 import com.example.festOn.application.user.dao.UserRepository;
 import com.example.festOn.application.user.entity.User;
-import com.example.festOn.common.auth.service.RefreshTokenService;
 import com.example.festOn.common.s3.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,13 +19,12 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final S3Service s3Service;
-    private final RefreshTokenService refreshTokenService;
 
     @Value("${spring.cloud.aws.s3.default-profile-img}")
     private String defaultImg;
 
     @Transactional
-    public Long save(String nickname, MultipartFile userImgFile) {
+    public String save(String nickname, MultipartFile userImgFile) {
         String kakaoId = getCurrentUserId();
         Optional<User> existingUser = userRepository.findByKakaoId(kakaoId);
 
@@ -38,7 +36,7 @@ public class UserService {
             User user = existingUser.get();
             user.setNickname(nickname);
             user.setUserImg(userImg);
-            return userRepository.save(user).getId();
+            return userRepository.save(user).getKakaoId();
         }
 
         User newUser = User.builder()
@@ -50,15 +48,16 @@ public class UserService {
                 .nightAlarm(true)
                 .build();
 
-        return userRepository.save(newUser).getId();
+        return userRepository.save(newUser).getKakaoId();
     }
 
     @Transactional
-    public Long deleteUser() {
+    public String deleteUser() {
         User user = getCurrentUser();
         userRepository.delete(user);
-        refreshTokenService.deleteRefreshToken(user.getKakaoId());
-        return user.getId();
+        // SecurityContext 초기화 (탈퇴 후 더 이상 인증되지 않도록)
+        SecurityContextHolder.clearContext();
+        return user.getKakaoId();
     }
 
     public User findByKakaoId(String kakaoId) {

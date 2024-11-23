@@ -3,9 +3,6 @@ package com.example.festOn.common.config;
 import com.example.festOn.application.user.service.UserService;
 import com.example.festOn.common.auth.filter.JwtAuthenticationFilter;
 import com.example.festOn.common.auth.jwt.JwtTokenProvider;
-import com.example.festOn.common.auth.service.RefreshTokenService;
-import com.example.festOn.common.oauth2.handler.CustomAuthenticationSuccessHander;
-import com.example.festOn.common.oauth2.service.CustomOAuth2UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -33,11 +30,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final RefreshTokenService refreshTokenService;
-    private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
     private final CorsProperties corsProperties;
-    private final UrlProperties urlProperties;
 
     private static final String[] ALLOWED_URL = {
             "/**",
@@ -81,10 +75,6 @@ public class SecurityConfig {
                         .tokenEndpoint(token -> token
                                 .accessTokenResponseClient(kakaoAccessTokenResponseClient())
                         )
-                        .userInfoEndpoint(userInfo -> userInfo
-                                .userService(oAuth2UserService())
-                        )
-                        .successHandler(customAuthenticationSuccessHander())
                         .failureHandler(new SimpleUrlAuthenticationFailureHandler("/login-failure"))
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling
@@ -106,15 +96,6 @@ public class SecurityConfig {
         return source;
     }
 
-    @Bean
-    public OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService() {
-        return new CustomOAuth2UserService(userService);
-    }
-
-    @Bean
-    public CustomAuthenticationSuccessHander customAuthenticationSuccessHander() {
-        return new CustomAuthenticationSuccessHander(jwtTokenProvider, refreshTokenService, urlProperties);
-    }
 
     @Bean
     public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> kakaoAccessTokenResponseClient() {

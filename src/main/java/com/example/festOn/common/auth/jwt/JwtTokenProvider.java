@@ -21,9 +21,6 @@ public class JwtTokenProvider {
     @Value("${spring.jwt.expiration}")
     private long validityInMilliseconds;
 
-    @Value("${spring.jwt.refresh-expiration}")
-    private long refreshValidityInMilliseconds;
-
     // SecretKey 생성
     private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(secretKey.getBytes());
@@ -34,20 +31,6 @@ public class JwtTokenProvider {
         Claims claims = Jwts.claims().subject(kakaoId).build();
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
-
-        return Jwts.builder()
-                .claims(claims)
-                .issuedAt(now)
-                .expiration(validity)
-                .signWith(getSigningKey())
-                .compact();
-    }
-
-    // 리프레시 토큰 생성
-    public String createRefreshToken(String kakaoId) {
-        Claims claims = Jwts.claims().subject(kakaoId).build();
-        Date now = new Date();
-        Date validity = new Date(now.getTime() + refreshValidityInMilliseconds);
 
         return Jwts.builder()
                 .claims(claims)
