@@ -8,13 +8,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,6 +25,13 @@ public class FestivalController {
     public void testCrawling() throws IOException {
         festivalService.crawlFestival();
     }*/
+
+    @Operation(summary = "id로 축제 조회", description = "축제 상세보기 ")
+    @GetMapping("/{id}")
+    public ResponseEntity<Optional<Festival>> findFestival(
+            @Parameter(description = "Festival Id를 입력해주세요.", required = true) @PathVariable Long id) {
+        return ResponseEntity.ok().body(festivalService.findById(id));
+    }
 
     @Operation(summary = "축제 검색", description = "검색어, 날짜, 지역으로 축제를 검색합니다")
     @GetMapping("/search")
@@ -48,4 +53,5 @@ public class FestivalController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate givenDate) {
         return ResponseEntity.ok().body(festivalService.findAllByGivenDate(givenDate));
     }
+
 }
