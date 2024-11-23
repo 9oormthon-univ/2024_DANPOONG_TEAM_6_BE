@@ -6,6 +6,7 @@ import com.example.festOn.application.festival.entity.Festival;
 import com.example.festOn.application.review.dao.ReviewImgRepository;
 import com.example.festOn.application.review.dao.ReviewRepository;
 import com.example.festOn.application.review.dto.CreateReviewRequest;
+import com.example.festOn.application.review.dto.ReviewResponse;
 import com.example.festOn.application.review.entity.Review;
 import com.example.festOn.application.review.entity.ReviewImg;
 import com.example.festOn.application.user.entity.User;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,6 +46,13 @@ public class ReviewService {
         }
 
         reviewRepository.save(review);
+    }
+
+    public List<Review> findAllByFestivalId(Long festival_id) {
+        List<Review> reviewList = reviewRepository.findAllByFestivalId(festival_id);
+
+
+        return reviewList;
     }
 
 }

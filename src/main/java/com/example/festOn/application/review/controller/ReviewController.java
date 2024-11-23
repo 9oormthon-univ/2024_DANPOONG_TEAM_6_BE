@@ -1,6 +1,8 @@
 package com.example.festOn.application.review.controller;
 
 import com.example.festOn.application.review.dto.CreateReviewRequest;
+import com.example.festOn.application.review.dto.ReviewResponse;
+import com.example.festOn.application.review.entity.Review;
 import com.example.festOn.application.review.service.ReviewService;
 import com.example.festOn.application.user.entity.User;
 import com.example.festOn.application.user.service.UserService;
@@ -27,7 +29,6 @@ public class ReviewController {
     private final ReviewService reviewService;
     private final S3Service s3Service;
 
-
     @Operation(summary = "Create", description = "소감 올리기")
     @PostMapping("/add")
     public ResponseEntity <String> createReview (
@@ -47,5 +48,15 @@ public class ReviewController {
 
         reviewService.saveReview(user, imageUrlList, createReviewRequest);
         return ResponseEntity.ok().body("review created");
+    }
+
+    @Operation(summary = "Read", description = "소감 조회")
+    @GetMapping
+    public ResponseEntity <List<Review>> findAllByFestivalId (
+            @Parameter(description = "축제 id로 전체 소감 조회", required = true)
+            @RequestParam Long festival_id) {
+
+
+        return ResponseEntity.ok().body(reviewService.findAllByFestivalId(festival_id));
     }
 }
