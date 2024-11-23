@@ -51,7 +51,8 @@ public class SecurityConfig {
             "/oauth2/**",
             "/oauth/login/kakao",
             "/login-failure",
-            "/error"
+            "/error",
+            "/festival/testCrawl"
     };
 
     @Bean
