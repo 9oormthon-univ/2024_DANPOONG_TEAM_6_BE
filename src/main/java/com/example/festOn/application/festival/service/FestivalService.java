@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +27,10 @@ public class FestivalService {
 
     public List<Festival> findAllByGivenDate(LocalDate givenDate) {
         return festivalRepository.findAllByGivenDate(givenDate);
+    }
+
+    public Optional<Festival> findById(Long id) {
+        return festivalRepository.findById(id);
     }
 
     public void crawlFestival() throws IOException {
