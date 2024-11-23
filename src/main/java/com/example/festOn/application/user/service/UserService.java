@@ -1,6 +1,7 @@
 package com.example.festOn.application.user.service;
 
 import com.example.festOn.application.user.dao.UserRepository;
+import com.example.festOn.application.user.dto.UserResponseDto;
 import com.example.festOn.application.user.entity.User;
 import com.example.festOn.common.s3.service.S3Service;
 import lombok.RequiredArgsConstructor;

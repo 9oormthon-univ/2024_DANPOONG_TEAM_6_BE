@@ -29,4 +29,11 @@ public class UserController {
         String kakaoId = userService.deleteUser();
         return ResponseEntity.ok(kakaoId);
     }
+
+    @Operation(summary = "회원 정보 조회", description = "마이페이지 메인에서 회원 정보를 조회합니다. 프로필 사진, 닉네임, 나의 축제 방문 기록을 반환합니다.")
+    @DeleteMapping("/my")
+    public ResponseEntity<String> getUser() {
+        String kakaoId = userService.deleteUser();
+        return ResponseEntity.ok(kakaoId);
+    }
 }
