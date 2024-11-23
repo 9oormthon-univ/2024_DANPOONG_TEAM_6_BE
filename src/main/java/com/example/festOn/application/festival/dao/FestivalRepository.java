@@ -25,4 +25,5 @@ public interface FestivalRepository extends JpaRepository<Festival, Long> {
 
     @Query("SELECT f FROM Festival f WHERE f.start > :givenDate")
     List<Festival> findAllBeforeStart(@Param("givenDate") LocalDate givenDate);
+
 }
