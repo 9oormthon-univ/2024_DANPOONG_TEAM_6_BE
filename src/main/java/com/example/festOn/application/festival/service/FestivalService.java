@@ -12,8 +12,10 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +37,12 @@ public class FestivalService {
 
     public List<Festival> findAllBeforeStart(LocalDate givenDate) {
         return festivalRepository.findAllBeforeStart(givenDate);
+    }
+
+    public List<Festival> getRandomFestival(LocalDate givenDate) {
+        List<Festival> festivalList = festivalRepository.findAllByGivenDate(givenDate);
+        Collections.shuffle(festivalList);
+        return festivalList.stream().limit(5).collect(Collectors.toList());
     }
 
     public void crawlFestival() throws IOException {
