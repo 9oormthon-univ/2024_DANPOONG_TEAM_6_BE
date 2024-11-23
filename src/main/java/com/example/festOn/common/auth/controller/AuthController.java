@@ -50,11 +50,13 @@ public class AuthController {
 
         // 사용자 DB 조회
         User existingUser = userService.findByKakaoId(userInfo.getId());
+        log.info("existingUser ? " + existingUser);
         if (existingUser == null) {
             // 새 사용자: 가입 필요
             return ResponseEntity.status(HttpStatus.OK).body(new AuthResponse("SIGNUP_REQUIRED", userInfo));
         }
 
+        log.info("existingUser : " + existingUser.getKakaoId());
         // 기존 사용자: JWT 발행
         String jwtToken = jwtTokenProvider.createToken(existingUser.getKakaoId());
         return ResponseEntity.ok(new AuthResponse("LOGIN_SUCCESS", jwtToken));
