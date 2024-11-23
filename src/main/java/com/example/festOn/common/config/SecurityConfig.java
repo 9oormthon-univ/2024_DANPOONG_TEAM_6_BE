@@ -34,13 +34,13 @@ public class SecurityConfig {
     private final CorsProperties corsProperties;
 
     private static final String[] ALLOWED_URL = {
-            "/**",
+            "/",
+            "/auth/kakao",
             "/index.html",
             "/swagger-ui.html",
             "/swagger-ui/**",
             "/api-docs",
             "/api-docs/**",
-            "/api/token/reissue",
             "/oauth/**",
             "/oauth2/**",
             "/oauth/login/kakao",
