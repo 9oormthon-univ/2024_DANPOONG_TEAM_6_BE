@@ -55,7 +55,7 @@ public class FestivalController {
         return ResponseEntity.ok().body(festivalService.findAllByGivenDate(givenDate));
     }
 
-    @Operation(summary = "전체 조회", description = "현재 날짜 기준으로 진행 중 -> 진행 에정 순서로 조회")
+    @Operation(summary = "전체 조회", description = "오늘 날짜 기준으로 진행 중 -> 진행 에정 순서로 조회")
     @GetMapping("/all")
     public ResponseEntity<List<Festival>> getFestivalList () {
         LocalDate now = LocalDate.now();
