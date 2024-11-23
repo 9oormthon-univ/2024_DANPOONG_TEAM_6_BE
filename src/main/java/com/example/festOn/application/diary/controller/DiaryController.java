@@ -1,8 +1,8 @@
 package com.example.festOn.application.diary.controller;
 
 import com.example.festOn.application.diary.dto.CreateDiaryRequest;
+import com.example.festOn.application.diary.dto.DiaryResponseDto;
 import com.example.festOn.application.diary.service.DiaryService;
-import com.example.festOn.application.review.dto.CreateReviewRequest;
 import com.example.festOn.application.user.entity.User;
 import com.example.festOn.application.user.service.UserService;
 import com.example.festOn.common.s3.service.S3Service;
@@ -45,5 +45,15 @@ public class DiaryController {
 
         diaryService.saveDiary(user, imageUrlList, createDiaryRequest);
         return ResponseEntity.ok().body("diary created");
+    }
+
+    @Operation(summary = "Read", description = "일기 상세 조회")
+    @GetMapping(value = "/{diaryId}")
+    public ResponseEntity<DiaryResponseDto> readDiary(
+            @Parameter(description = "Diary Id를 입력해주세요.", required = true)
+            @PathVariable Long diaryId) {
+        User user = userService.getCurrentUser();
+        DiaryResponseDto diaryResponseDto = diaryService.getDiary(user, diaryId);
+        return ResponseEntity.ok().body(diaryResponseDto);
     }
 }

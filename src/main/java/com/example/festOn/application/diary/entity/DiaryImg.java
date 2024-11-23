@@ -2,6 +2,7 @@ package com.example.festOn.application.diary.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import net.minidev.json.annotate.JsonIgnore;
 
 @Entity
 @Getter
@@ -11,13 +12,11 @@ import lombok.*;
 public class DiaryImg {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", updatable = false)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="diary_id")
     private Diary diary;
-
 
     private String imgUrl;
 }

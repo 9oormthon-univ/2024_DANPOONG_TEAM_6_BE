@@ -38,10 +38,6 @@ public class Diary extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(
-            mappedBy = "diary",
-            cascade = {CascadeType.PERSIST,CascadeType.REMOVE},
-            orphanRemoval = true
-    )
+    @OneToMany(mappedBy = "diary", cascade = CascadeType.ALL)
     private List<DiaryImg> diaryImgList = new ArrayList<>();
 }

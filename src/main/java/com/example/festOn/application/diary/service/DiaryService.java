@@ -4,21 +4,15 @@ import com.amazonaws.services.kms.model.NotFoundException;
 import com.example.festOn.application.diary.dao.DiaryImgRepository;
 import com.example.festOn.application.diary.dao.DiaryRepository;
 import com.example.festOn.application.diary.dto.CreateDiaryRequest;
+import com.example.festOn.application.diary.dto.DiaryResponseDto;
 import com.example.festOn.application.diary.entity.Diary;
 import com.example.festOn.application.diary.entity.DiaryImg;
 import com.example.festOn.application.festival.dao.FestivalRepository;
 import com.example.festOn.application.festival.entity.Festival;
-import com.example.festOn.application.review.dto.CreateReviewRequest;
-import com.example.festOn.application.review.entity.Review;
-import com.example.festOn.application.review.entity.ReviewImg;
 import com.example.festOn.application.user.entity.User;
-import com.example.festOn.application.user.service.UserService;
-import com.example.festOn.common.exception.UserNotFoundException;
-import com.example.festOn.common.s3.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -53,5 +47,24 @@ public class DiaryService {
         diaryRepository.save(diary);
     }
 
+    @Transactional
+    public DiaryResponseDto getDiary(User user, Long diaryId) {
+        Diary diary = diaryRepository.findById(diaryId)
+                .orElseThrow(() -> new NotFoundException("Diary Not Found"));
 
+        Festival festival = festivalRepository.findById(diary.getFestival().getId())
+                .orElseThrow(()->new NotFoundException("Festival Not Found"));
+
+        List<String> files = diaryImgRepository.findImgUrlByDiaryId(diaryId);
+
+        return DiaryResponseDto.builder()
+                .nickname(user.getNickname())
+                .userImg(user.getUserImg())
+                .festivalId(festival.getId())
+                .title(diary.getTitle())
+                .body(diary.getBody())
+                .createdAt(diary.getCreatedAt())
+                .diaryImgList(files)
+                .build();
+    }
 }
