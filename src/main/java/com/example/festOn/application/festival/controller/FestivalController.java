@@ -11,8 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequiredArgsConstructor
@@ -54,4 +55,17 @@ public class FestivalController {
         return ResponseEntity.ok().body(festivalService.findAllByGivenDate(givenDate));
     }
 
+    @Operation(summary = "전체 조회", description = "현재 날짜 기준으로 진행 중 -> 진행 에정 순서로 조회")
+    @GetMapping("/all")
+    public ResponseEntity<List<Festival>> getFestivalList () {
+        LocalDate now = LocalDate.now();
+        List<Festival> currentList = festivalService.findAllByGivenDate(now);
+        List<Festival> beforeList = festivalService.findAllBeforeStart(now);
+
+        List<Festival> result = Stream.of(currentList, beforeList)
+                .flatMap(x -> x.stream())
+                .toList();
+
+        return ResponseEntity.ok().body(result);
+    }
 }

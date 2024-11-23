@@ -33,6 +33,10 @@ public class FestivalService {
         return festivalRepository.findById(id);
     }
 
+    public List<Festival> findAllBeforeStart(LocalDate givenDate) {
+        return festivalRepository.findAllBeforeStart(givenDate);
+    }
+
     public void crawlFestival() throws IOException {
         String festivalURL = "https://www.mcst.go.kr/kor/s_culture/festival/festivalList.jsp";
         int currentPage = 1;
