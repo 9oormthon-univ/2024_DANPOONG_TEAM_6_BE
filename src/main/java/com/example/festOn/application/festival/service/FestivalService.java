@@ -1,7 +1,7 @@
 package com.example.festOn.application.festival.service;
 
-import com.example.festOn.application.festival.entity.Festival;
 import com.example.festOn.application.festival.dao.FestivalRepository;
+import com.example.festOn.application.festival.entity.Festival;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -12,11 +12,17 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class FestivalService {
     private final FestivalRepository festivalRepository;
+
+
+    public List<Festival> searchFestivals(String keyword, LocalDate startDate, LocalDate endDate, String region) {
+        return festivalRepository.searchFestivals(keyword, startDate, endDate, region);
+    }
 
     public void crawlFestival() throws IOException {
         String festivalURL = "https://www.mcst.go.kr/kor/s_culture/festival/festivalList.jsp";
@@ -133,13 +139,7 @@ public class FestivalService {
             currentPage++;
         }
     }
-    
-    private String getSafeElementText(Elements elements, int index) {
-        if (index >= 0 && index < elements.size()) {
-            return elements.get(index).text();
-        }
-        return ""; // 기본값 반환
-    }
+
     private String getElementTextByLabel(Document doc, String label) {
         Elements dtElements = doc.select("dt");
         for (Element dt : dtElements) {
