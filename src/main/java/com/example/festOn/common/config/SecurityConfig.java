@@ -40,7 +40,7 @@ public class SecurityConfig {
     private final UrlProperties urlProperties;
 
     private static final String[] ALLOWED_URL = {
-            "/",
+            "/**",
             "/index.html",
             "/swagger-ui.html",
             "/swagger-ui/**",
