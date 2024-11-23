@@ -18,7 +18,14 @@ ONFEST의 백엔드 레포입니다.
 ![docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
 ![github actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)
 ![mysql](https://img.shields.io/badge/MySQL-00000F?style=for-the-badge&logo=mysql&logoColor=white)
+![aws](https://img.shields.io/badge/jsoup-2790BD?style=for-the-badge&logo=jsoup&logoColor=white)
 ![aws](https://img.shields.io/badge/Amazon_AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white)
+![rds](https://img.shields.io/badge/RDS-2C72B8?style=for-the-badge&logo=amazon-aws&logoColor=white)
+![ec2](https://img.shields.io/badge/EC2-F6893C?style=for-the-badge&logo=amazon-aws&logoColor=white)
+![S3](https://img.shields.io/badge/S3-E25343?style=for-the-badge&logo=amazon-aws&logoColor=white)
+![Elastic Container Registry](https://img.shields.io/badge/ECR-F6893C?style=for-the-badge&logo=amazon-aws&logoColor=white)
+![VPC](https://img.shields.io/badge/VPC-F6893C?style=for-the-badge&logo=amazon-aws&logoColor=white)
+
  <b>rds, ec2, s3, Elastic Container Registry, VPC</b>
 
 <br />
