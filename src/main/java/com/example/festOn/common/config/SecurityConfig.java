@@ -47,6 +47,7 @@ public class SecurityConfig {
             "/login-failure",
             "/error",
             "/festival/*",
+            "/review/*",
     };
 
     @Bean
