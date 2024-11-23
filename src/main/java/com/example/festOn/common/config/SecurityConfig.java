@@ -67,7 +67,6 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
-                        .loginPage("/oauth2/authorization/kakao")
                         .authorizationEndpoint(authorization -> authorization
                                 .baseUri("/oauth2/authorization")
                         )
@@ -81,6 +80,7 @@ public class SecurityConfig {
                             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized: Access token is invalid or expired");
                         })
                 );
+
         return http.build();
     }
 
