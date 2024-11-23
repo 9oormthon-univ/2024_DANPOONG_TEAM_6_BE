@@ -3,6 +3,7 @@ package com.example.festOn.application.review.entity;
 import com.example.festOn.application.common.BaseEntity;
 import com.example.festOn.application.festival.entity.Festival;
 import com.example.festOn.application.user.entity.User;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -20,11 +21,11 @@ public class Review extends BaseEntity {
     @Column(name = "id", updatable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "festival_id")
     private Festival festival;
 
@@ -34,11 +35,8 @@ public class Review extends BaseEntity {
     @Column(name = "body",length = 1000)
     private String body;
 
-    @OneToMany(
-            mappedBy = "review",
-            cascade = {CascadeType.PERSIST,CascadeType.REMOVE},
-            orphanRemoval = true
-    )
+    @OneToMany(mappedBy = "review")
+    @JsonIgnoreProperties({"review"})
     private List<ReviewImg> reviewImgList = new ArrayList<>();
 
     @Builder

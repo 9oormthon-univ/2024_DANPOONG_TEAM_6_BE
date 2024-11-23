@@ -48,6 +48,7 @@ public class SecurityConfig {
             "/error",
             "/festival/*",
             "/review/*",
+            "/review*",
     };
 
     @Bean
